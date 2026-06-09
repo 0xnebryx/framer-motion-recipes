@@ -54,22 +54,11 @@ The negative offsets and slow speeds simulate distance — far things move less 
 
 ---
 
-## 2. Aurora gradient that responds to scroll
+## 2. Scroll-linked background interpolation
 
-```tsx
-const { scrollYProgress } = useScroll();
-const auroraSweep = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], [
-  'radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.10), transparent 60%)',
-  'radial-gradient(ellipse at 30% 30%, rgba(99, 102, 241, 0.10), transparent 60%)',
-  'radial-gradient(ellipse at 70% 50%, rgba(6, 182, 212, 0.10), transparent 60%)',
-  'radial-gradient(ellipse at 30% 70%, rgba(236, 72, 153, 0.08), transparent 60%)',
-  'radial-gradient(ellipse at 50% 100%, rgba(168, 85, 247, 0.10), transparent 60%)',
-]);
+`useTransform` with non-numeric values (like CSS gradient strings) lets you interpolate background, color, or transform expressions across scroll progress. Define stops, return a `motion.div` that consumes the value as `style.background` (or any other animatable property), pin it to the viewport. Cheap, GPU-friendly, and easy to tune without rewriting the layout.
 
-return <motion.div style={{ background: auroraSweep }} className="fixed inset-0 -z-50" />;
-```
-
-The gradient color and position interpolate smoothly between the 5 stops as you scroll. Cheap, GPU-friendly, premium feel.
+The specific stops, colors, positions, and number of intermediate frames are aesthetic choices. Pick a palette that fits the brand, keep alpha low (≤0.12) so it reads as atmosphere not foreground, and test that the transitions look right at slow and fast scroll speeds.
 
 ---
 
